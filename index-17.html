@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fff7ed">
+<title>Nosso Cantinho — Listas & Lembretes</title>
+<style>
+:root{
+ --bg:#fff8f1;--paper:#fffdf9;--ink:#40352f;--muted:#89796f;--line:#f0e2d5;
+ --coral:#ef8068;--coral-dark:#d96550;--peach:#ffd8bd;--yellow:#f6cf69;
+ --sage:#a8c6a1;--sage-dark:#547b54;--blue:#a9c8df;--lilac:#c7b5df;
+ --shadow:0 12px 32px #7a4e3010;--radius:24px;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
+.app{max-width:1120px;margin:auto;padding:22px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffe2cf,#fff0bd 60%,#e2eedc);border-radius:30px;padding:28px 30px;box-shadow:var(--shadow);min-height:210px}
+.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#ffffff55;right:95px;top:-100px}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative;z-index:1}
+.brand{font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:900;color:#896b58}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.04;margin:22px 0 9px;max-width:570px;letter-spacing:-1.5px}
+.hero p{color:#765e50;margin:0;max-width:480px;line-height:1.5}
+.illustration{position:absolute;right:28px;bottom:10px;font-size:clamp(72px,12vw,130px);transform:rotate(-8deg);filter:drop-shadow(0 9px 2px #976b3214);z-index:1}
+.pill{background:#ffffffa8;border:1px solid #ffffffa8;padding:9px 13px;border-radius:99px;font-size:12px;font-weight:800;color:#765e50}
+.nav{display:flex;gap:9px;flex-wrap:wrap;margin:22px 0}
+.nav button{background:var(--paper);border:1px solid var(--line);color:var(--muted);padding:12px 17px;border-radius:14px;font-weight:800;transition:.2s}
+.nav button.active,.nav button:hover{background:var(--ink);color:white;transform:translateY(-2px)}
+.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(270px,.8fr);gap:18px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+h2{font-size:21px;margin:0;letter-spacing:-.4px} .sub{color:var(--muted);font-size:13px;margin-top:5px}
+.count{background:#fff0d2;color:#8d6730;border-radius:12px;padding:7px 10px;font-size:12px;font-weight:900;white-space:nowrap}
+.add-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:13px}
+.field{width:100%;border:1px solid var(--line);background:#fffaf5;padding:13px 14px;border-radius:13px;outline:none;color:var(--ink);min-width:0}
+.field:focus{border-color:var(--coral);box-shadow:0 0 0 3px #ef806820}
+.btn{border-radius:13px;padding:12px 15px;font-weight:900;transition:.18s}
+.btn-primary{background:var(--coral);color:white}.btn-primary:hover{background:var(--coral-dark);transform:translateY(-1px)}
+.btn-soft{background:#f7eee5;color:#725e50}.btn-danger{background:#fff0ed;color:#bd5545}
+.extra-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.search-row{display:flex;gap:8px;margin-bottom:12px}
+.search-row .field{padding:10px 12px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:15px}
+.filter{background:#f7eee5;color:#816f62;padding:7px 11px;border-radius:99px;font-size:12px;font-weight:800}
+.filter.active{background:#dcebd8;color:#426744}
+.list{display:flex;flex-direction:column;gap:9px}
+.item{display:flex;align-items:center;gap:11px;padding:12px;background:white;border:1px solid #f1e8df;border-radius:16px;transition:.2s;animation:pop .2s ease}
+.item:hover{border-color:#edc4ae;transform:translateY(-1px)}
+@keyframes pop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.check{width:23px;height:23px;flex:0 0 23px;border:2px solid #d7c7ba;border-radius:8px;display:grid;place-items:center;background:#fff;cursor:pointer;color:white}
+.item.done .check{background:var(--sage-dark);border-color:var(--sage-dark)}
+.item.done .check:after{content:"✓";font-weight:900}
+.item-main{flex:1;min-width:0}.item-name{font-weight:800;overflow-wrap:anywhere}.item.done .item-name{text-decoration:line-through;color:#a99c92}
+.item-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;color:var(--muted);font-size:11px}
+.tag{border-radius:7px;padding:3px 7px;background:#fff0d2;color:#87652f;font-weight:800}.tag.casa{background:#e2eddd;color:#50724d}.tag.pessoal{background:#e9e2f6;color:#75618f}
+.item-actions{display:flex;gap:5px}.icon-btn{width:32px;height:32px;border-radius:10px;background:#faf3ec;color:#8a7567;font-weight:900}.icon-btn:hover{background:#f5dfd0}
+.empty{text-align:center;padding:30px 12px;color:var(--muted)}.empty .emoji{font-size:38px;margin-bottom:8px}
+.progress-wrap{background:#f4e9df;height:9px;border-radius:99px;overflow:hidden;margin:12px 0 6px}.progress{height:100%;background:linear-gradient(90deg,var(--coral),var(--yellow));width:0;transition:width .3s;border-radius:99px}
+.progress-text{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.quick{border-radius:16px;padding:13px;text-align:left;background:#fff0e7;color:#73564a;min-height:90px;transition:.2s}
+.quick:nth-child(2){background:#edf4e9}.quick:nth-child(3){background:#fff5d9}.quick:nth-child(4){background:#eee8f7}
+.quick:hover{transform:translateY(-3px)}.quick .big{font-size:25px;display:block;margin-bottom:6px}.quick b{font-size:12px}
+.reminder-form{display:grid;gap:9px;margin-bottom:18px}.reminder-form .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reminder{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:#fff7e2;border:1px solid #f4e5bc}
+.reminder:nth-child(even){background:#eef5e9;border-color:#dce8d5}
+.reminder .date-badge{min-width:49px;text-align:center;background:white;border-radius:12px;padding:8px 5px;color:#98773b;font-size:11px;font-weight:900}
+.reminder .date-badge strong{display:block;font-size:19px}
+.reminder-info{flex:1;min-width:0}.reminder-info b{display:block;overflow-wrap:anywhere}.reminder-info small{display:block;color:var(--muted);margin-top:4px}
+.reminder-actions{display:flex;gap:5px}
+.settings{display:grid;gap:15px}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:31px;height:31px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px #dfd1c4}.swatch.active{box-shadow:0 0 0 3px var(--ink)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--ink);color:white;padding:12px 18px;border-radius:99px;font-weight:800;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{text-align:center;color:#a08d7f;font-size:12px;padding:25px 0 10px}
+.hidden{display:none!important}
+@media(max-width:780px){.app{padding:13px}.hero{padding:23px;min-height:235px}.hero:after{right:-40px}.illustration{right:18px;bottom:0;font-size:86px;opacity:.88}.hero p{max-width:70%}.layout{grid-template-columns:1fr}.panel{padding:17px}.nav{margin:15px 0}.nav button{flex:1;padding:11px 9px}.extra-fields{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.hero p{max-width:100%;padding-right:50px}.illustration{font-size:62px;right:9px;bottom:2px;opacity:.6}.pill{font-size:10px}.extra-fields{grid-template-columns:1fr}.item{gap:8px;padding:10px}.item-actions{gap:3px}.icon-btn{width:29px;height:29px}.panel-head{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+ <div class="hero-top"><div class="brand">☀ nosso cantinho</div><div class="pill">feito a dois ♡</div></div>
+ <h1>Pequenas coisas,<br>uma vida juntinhos.</h1>
+ <p>Organizem as compras, cuidem dos lembretes e deixem a rotina mais leve — do jeitinho de vocês.</p>
+ <div class="illustration" aria-hidden="true">🪴🛒</div>
+</header>
+
+<nav class="nav" aria-label="Navegação">
+ <button class="active" data-tab="shopping">🛒 Compras</button>
+ <button data-tab="reminders">🔔 Lembretes</button>
+ <button data-tab="settings">🎨 Personalizar</button>
+</nav>
+
+<main>
+<section id="shopping" class="tab layout">
+ <div class="panel">
+  <div class="panel-head"><div><h2>Lista de compras 🧺</h2><div class="sub">Tudo que falta pra casa e pra vocês.</div></div><span class="count" id="itemCount">0 itens</span></div>
+  <form id="itemForm">
+   <div class="add-form"><input id="itemName" class="field" maxlength="100" placeholder="Ex.: arroz, café, detergente..." required><button class="btn btn-primary" id="saveItemBtn">＋ Adicionar</button></div>
+   <div class="extra-fields">
+    <select id="itemCategory" class="field"><option value="Mercado">🛍️ Mercado</option><option value="Casa">🏡 Casa</option><option value="Pessoal">💗 Pessoal</option><option value="Pet">🐾 Pet</option><option value="Outro">✨ Outro</option></select>
+    <input id="itemQty" class="field" maxlength="40" placeholder="Quantidade (ex.: 2 unidades)">
+   </div>
+  </form>
+  <div class="search-row"><input id="searchItems" class="field" placeholder="🔎 Buscar item..."><button class="btn btn-soft" id="clearDone" type="button">Limpar ✓</button></div>
+  <div class="filters"><button class="filter active" data-filter="all">Todos</button><button class="filter" data-filter="pending">Faltam comprar</button><button class="filter" data-filter="done">Já comprados</button></div>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+  <div class="progress-text"><span id="progressLabel">Lista começando!</span><span id="progressPercent">0%</span></div>
+  <div class="list" id="shoppingList" style="margin-top:15px"></div>
+ </div>
+ <aside class="panel">
+  <div class="panel-head"><div><h2>Atalhos fofos ✨</h2><div class="sub">Um toque pra adicionar rapidinho.</div></div></div>
+  <div class="quick-grid">
+   <button class="quick" data-quick="🍌 Banana"><span class="big">🍌</span><b>Frutinhas</b></button>
+   <button class="quick" data-quick="🧻 Papel higiênico"><span class="big">🧻</span><b>Essenciais</b></button>
+   <button class="quick" data-quick="🥛 Leite"><span class="big">🥛</span><b>Café da manhã</b></button>
+   <button class="quick" data-quick="🧽 Detergente"><span class="big">🧽</span><b>Limpeza</b></button>
+  </div>
+  <div style="margin-top:22px;padding:16px;border-radius:17px;background:#fff3df">
+   <div style="font-size:25px">💌</div><b>Combinado de casal</b><p class="sub" style="line-height:1.6;margin-bottom:0">Anotem tudo aqui e confiram a lista antes de sair. Menos esquecimento, mais tempo juntinhos.</p>
+  </div>
+  <button class="btn btn-soft" style="width:100%;margin-top:13px" id="exportBtn">↗ Copiar lista de compras</button>
+ </aside>
+</section>
+
+<section id="reminders" class="tab hidden">
+ <div class="panel">
+  <div class="panel-head"><div><h2>Nossos lembretes 🔔</h2><div class="sub">Datas importantes, tarefas e coisinhas que não podem passar.</div></div><span class="count" id="reminderCount">0 lembretes</span></div>
+  <form id="reminderForm" class="reminder-form">
+   <input id="reminderTitle" class="field" maxlength="120" placeholder="O que vocês precisam lembrar?" required>
+   <div class="two"><input id="reminderDate" type="date" class="field" required><input id="reminderTime" type="time" class="field"></div>
+   <div class="two"><select id="reminderFor" class="field"><option value="Nós dois">💑 Nós dois</option><option value="Eu">🙋 Eu</option><option value="Meu amor">💗 Meu amor</option></select><select id="reminderType" class="field"><option value="Rotina">🏡 Rotina</option><option value="Conta">💸 Conta</option><option value="Data especial">🎂 Data especial</option><option value="Saúde">🌿 Saúde</option><option value="Outro">✨ Outro</option></select></div>
+   <button class="btn btn-primary" id="saveReminderBtn">＋ Criar lembrete</button>
+  </form>
+  <div class="filters"><button class="filter active" data-rfilter="upcoming">Próximos</button><button class="filter" data-rfilter="all">Todos</button><button class="filter" data-rfilter="past">Passados</button></div>
+  <div class="list" id="reminderList"></div>
+ </div>
+</section>
+
+<section id="settings" class="tab hidden">
+ <div class="layout">
+  <div class="panel"><div class="panel-head"><div><h2>Deixe com a cara de vocês 🎨</h2><div class="sub">Escolha uma paleta inspirada em ilustrações aconchegantes.</div></div></div>
+   <div class="settings">
+    <div class="setting-row"><div><b>🍑 Pôr do sol</b><div class="sub">Pêssego, coral e amarelinho</div></div><button class="swatches" data-theme="sunset" aria-label="Paleta pôr do sol"><span class="swatch" style="background:#ef8068"></span><span class="swatch" style="background:#ffd8bd"></span><span class="swatch" style="background:#f6cf69"></span></button></div>
+    <div class="setting-row"><div><b>🌿 Jardim</b><div class="sub">Verde sálvia e tons naturais</div></div><button class="swatches" data-theme="garden" aria-label="Paleta jardim"><span class="swatch" style="background:#719a70"></span><span class="swatch" style="background:#cfe0bd"></span><span class="swatch" style="background:#e9dfbd"></span></button></div>
+    <div class="setting-row"><div><b>🌊 Céu tranquilo</b><div class="sub">Azul suave e lavanda</div></div><button class="swatches" data-theme="sky" aria-label="Paleta céu tranquilo"><span class="swatch" style="background:#6f9fbd"></span><span class="swatch" style="background:#c5dcec"></span><span class="swatch" style="background:#c7b5df"></span></button></div>
+    <div class="setting-row"><div><b>🍓 Moranguinho</b><div class="sub">Rosa delicado e vermelho morango</div></div><button class="swatches" data-theme="berry" aria-label="Paleta moranguinho"><span class="swatch" style="background:#d95f76"></span><span class="swatch" style="background:#f8d9df"></span><span class="swatch" style="background:#e9a3a9"></span></button></div>
+   </div>
+  </div>
+  <aside class="panel"><div style="font-size:42px">🧸💐</div><h2>Um cantinho de vocês</h2><p class="sub" style="line-height:1.7">Os itens e lembretes ficam salvos neste navegador automaticamente. Para compartilhar entre dois celulares, o arquivo precisa ser publicado com um banco de dados compartilhado — o salvamento local sozinho não sincroniza entre aparelhos.</p><button class="btn btn-danger" id="resetBtn" style="width:100%;margin-top:12px">Apagar todos os dados</button></aside>
+ </div>
+</section>
+</main>
+<div class="footer">Feito com carinho ♡ · Nosso Cantinho</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const STORE = 'nossoCantinho_v1';
+let state = {items:[], reminders:[], theme:'sunset'};
+let itemFilter='all', reminderFilter='upcoming', editItemId=null, editReminderId=null;
+try { const saved=JSON.parse(localStorage.getItem(STORE)); if(saved) state={...state,...saved}; } catch(e){}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function save(){localStorage.setItem(STORE,JSON.stringify(state));}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2200)}
+const themes={
+ sunset:{bg:'#fff8f1',paper:'#fffdf9',ink:'#40352f',muted:'#89796f',line:'#f0e2d5',coral:'#ef8068',coralDark:'#d96550',sageDark:'#547b54'},
+ garden:{bg:'#f5f8ef',paper:'#fffef9',ink:'#354337',muted:'#788575',line:'#e0e8d8',coral:'#719a70',coralDark:'#527e54',sageDark:'#547b54'},
+ sky:{bg:'#f3f8fb',paper:'#ffffff',ink:'#344653',muted:'#718493',line:'#dce8ef',coral:'#6f9fbd',coralDark:'#4f819f',sageDark:'#547b80'},
+ berry:{bg:'#fff5f6',paper:'#fffdfd',ink:'#50373d',muted:'#987b82',line:'#f0dfe3',coral:'#d95f76',coralDark:'#b9445b',sageDark:'#668b69'}
+};
+function applyTheme(){const t=themes[state.theme]||themes.sunset;Object.entries(t).forEach(([k,v])=>document.documentElement.style.setProperty('--'+({bg:'bg',paper:'paper',ink:'ink',muted:'muted',line:'line',coral:'coral',coralDark:'coral-dark',sageDark:'sage-dark'}[k]),v));$$('[data-theme]').forEach(b=>{b.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));if(b.dataset.theme===state.theme)b.querySelector('.swatch').classList.add('active')});}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderItems(){
+ const q=$('#searchItems').value.trim().toLowerCase();
+ let arr=state.items.filter(i=>(i.name+' '+i.category+' '+(i.qty||'')).toLowerCase().includes(q));
+ if(itemFilter==='pending')arr=arr.filter(i=>!i.done);if(itemFilter==='done')arr=arr.filter(i=>i.done);
+ arr.sort((a,b)=>Number(a.done)-Number(b.done));
+ $('#shoppingList').innerHTML=arr.length?arr.map(i=>`<div class="item ${i.done?'done':''}">
+ <button class="check" data-check="${i.id}" aria-label="Marcar ${escapeHtml(i.name)} como comprado"></button>
+ <div class="item-main"><div class="item-name">${escapeHtml(i.name)}</div><div class="item-meta"><span class="tag ${i.category==='Casa'?'casa':i.category==='Pessoal'?'pessoal':''}">${escapeHtml(i.category)}</span>${i.qty?`<span>${escapeHtml(i.qty)}</span>`:''}</div></div>
+ <div class="item-actions"><button class="icon-btn" data-edit-item="${i.id}" aria-label="Editar">✎</button><button class="icon-btn" data-del-item="${i.id}" aria-label="Remover">×</button></div></div>`).join(''):`<div class="empty"><div class="emoji">${q?'🔎':'🧺'}</div><b>${q?'Nenhum item encontrado':'Sua lista está leve!'}</b><div class="sub">${q?'Tente outra busca.':'Adicione o primeiro item ali em cima.'}</div></div>`;
+ const total=state.items.length,done=state.items.filter(i=>i.done).length,pct=total?Math.round(done/total*100):0;
+ $('#itemCount').textContent=`${total} ${total===1?'item':'itens'}`;$('#progress').style.width=pct+'%';$('#progressPercent').textContent=pct+'%';$('#progressLabel').textContent=total?(done===total?'Tudo comprado! 🎉':`${done} de ${total} comprados`):'Lista começando!';
+}
+function resetItemForm(){editItemId=null;$('#itemForm').reset();$('#saveItemBtn').textContent='＋ Adicionar';}
+$('#itemForm').addEventListener('submit',e=>{e.preventDefault();const name=$('#itemName').value.trim();if(!name)return;const data={name,category:$('#itemCategory').value,qty:$('#itemQty').value.trim()};if(editItemId){state.items=state.items.map(i=>i.id===editItemId?{...i,...data}:i);toast('Item atualizado ✨')}else{state.items.push({id:uid(),...data,done:false,created:Date.now()});toast('Item adicionado à lista 🧺')}save();resetItemForm();renderItems();});
+$('#shoppingList').addEventListener('click',e=>{const check=e.target.closest('[data-check]'),edit=e.target.closest('[data-edit-item]'),del=e.target.closest('[data-del-item]');if(check){state.items=state.items.map(i=>i.id===check.dataset.check?{...i,done:!i.done}:i);save();renderItems()}if(edit){const i=state.items.find(i=>i.id===edit.dataset.editItem);if(i){editItemId=i.id;$('#itemName').value=i.name;$('#itemCategory').value=i.category;$('#itemQty').value=i.qty||'';$('#saveItemBtn').textContent='✓ Salvar edição';$('#itemName').focus();window.scrollTo({top:0,behavior:'smooth'})}}if(del){state.items=state.items.filter(i=>i.id!==del.dataset.delItem);save();renderItems();toast('Item removido') }});
+$('#searchItems').addEventListener('input',renderItems);
+$$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{itemFilter=b.dataset.filter;$$('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderItems()}));
+$('#clearDone').addEventListener('click',()=>{const n=state.items.filter(i=>i.done).length;if(!n)return toast('Ainda não tem itens comprados');state.items=state.items.filter(i=>!i.done);save();renderItems();toast(`${n} item(ns) removido(s)`)});
+$$('[data-quick]').forEach(b=>b.addEventListener('click',()=>{const name=b.dataset.quick.replace(/^[^\s]+\s/,'');state.items.push({id:uid(),name,category:'Mercado',qty:'',done:false,created:Date.now()});save();renderItems();toast(name+' adicionado!')}));
+$('#exportBtn').addEventListener('click',async()=>{const text='🛒 LISTA DE COMPRAS\\n'+(state.items.length?state.items.map(i=>`${i.done?'☑':'☐'} ${i.name}${i.qty?' — '+i.qty:''} (${i.category})`).join('\\n'):'Lista vazia');try{await navigator.clipboard.writeText(text);toast('Lista copiada! Pode mandar pra quem quiser 💌')}catch(e){prompt('Copie sua lista:',text)}});
+function dateParts(date){const d=new Date(date+'T12:00:00');return {day:String(d.getDate()).padStart(2,'0'),month:d.toLocaleDateString('pt-BR',{month:'short'}).replace('.',''),full:d.toLocaleDateString('pt-BR')}}
+function renderReminders(){const today=new Date();today.setHours(0,0,0,0);let arr=[...state.reminders].sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));if(reminderFilter==='upcoming')arr=arr.filter(r=>new Date(r.date+'T23:59:59')>=today);if(reminderFilter==='past')arr=arr.filter(r=>new Date(r.date+'T23:59:59')<today);
+ $('#reminderCount').textContent=`${state.reminders.length} ${state.reminders.length===1?'lembrete':'lembretes'}`;
+ $('#reminderList').innerHTML=arr.length?arr.map(r=>{const d=dateParts(r.date);return `<div class="reminder"><div class="date-badge"><strong>${d.day}</strong>${escapeHtml(d.month)}</div><div class="reminder-info"><b>${escapeHtml(r.title)}</b><small>📅 ${d.full}${r.time?' · ⏰ '+escapeHtml(r.time):''}</small><div class="item-meta"><span class="tag">${escapeHtml(r.type)}</span><span class="tag casa">${escapeHtml(r.who)}</span></div></div><div class="reminder-actions"><button class="icon-btn" data-edit-rem="${r.id}" aria-label="Editar lembrete">✎</button><button class="icon-btn" data-del-rem="${r.id}" aria-label="Excluir lembrete">×</button></div></div>`}).join(''):`<div class="empty"><div class="emoji">🔔</div><b>Nenhum lembrete por aqui</b><div class="sub">Criem um lembrete para não deixar nada passar.</div></div>`}
+function resetReminderForm(){editReminderId=null;$('#reminderForm').reset();$('#reminderDate').value=new Date().toLocaleDateString('en-CA');$('#saveReminderBtn').textContent='＋ Criar lembrete'}
+$('#reminderForm').addEventListener('submit',e=>{e.preventDefault();const data={title:$('#reminderTitle').value.trim(),date:$('#reminderDate').value,time:$('#reminderTime').value,who:$('#reminderFor').value,type:$('#reminderType').value};if(!data.date)return toast('Escolha uma data');if(editReminderId){state.reminders=state.reminders.map(r=>r.id===editReminderId?{...r,...data}:r);toast('Lembrete atualizado ✨')}else{state.reminders.push({id:uid(),...data});toast('Lembrete criado 🔔')}save();resetReminderForm();renderReminders()});
+$('#reminderList').addEventListener('click',e=>{const edit=e.target.closest('[data-edit-rem]'),del=e.target.closest('[data-del-rem]');if(edit){const r=state.reminders.find(r=>r.id===edit.dataset.editRem);if(!r)return;editReminderId=r.id;$('#reminderTitle').value=r.title;$('#reminderDate').value=r.date;$('#reminderTime').value=r.time||'';$('#reminderFor').value=r.who;$('#reminderType').value=r.type;$('#saveReminderBtn').textContent='✓ Salvar edição';window.scrollTo({top:0,behavior:'smooth'})}if(del){state.reminders=state.reminders.filter(r=>r.id!==del.dataset.delRem);save();renderReminders();toast('Lembrete removido')}});
+$$('[data-rfilter]').forEach(b=>b.addEventListener('click',()=>{reminderFilter=b.dataset.rfilter;$$('[data-rfilter]').forEach(x=>x.classList.toggle('active',x===b));renderReminders()}));
+$$('[data-tab]').forEach(b=>b.addEventListener('click',()=>{$$('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));$$('.tab').forEach(s=>s.classList.toggle('hidden',s.id!==b.dataset.tab));}));
+$$('[data-theme]').forEach(b=>b.addEventListener('click',()=>{state.theme=b.dataset.theme;applyTheme();save();toast('Paleta atualizada 🎨')}));
+$('#resetBtn').addEventListener('click',()=>{if(confirm('Tem certeza? Isso apaga todos os itens e lembretes salvos neste navegador.')){state={items:[],reminders:[],theme:state.theme};save();renderItems();renderReminders();toast('Dados apagados')}})
+$('#reminderDate').value=new Date().toLocaleDateString('en-CA');
+applyTheme();renderItems();renderReminders();
+</script>
+</body>
+</html>
